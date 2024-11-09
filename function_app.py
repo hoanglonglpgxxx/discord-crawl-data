@@ -27,7 +27,7 @@ def daily(myTimer: func.TimerRequest) -> None:
 
     # Format message with fetched news data
     msg = f"**Today's Hot News - {datetime.datetime.now().strftime('%Y-%m-%d')}**\n\n"
-    for result in news_list:  # Limiting to the first 5 articles for brevity
+    for result in news_list[:5]:  # Limiting to the first 5 articles for brevity
         title = result.get('title', 'No title')
         link = result.get('link', 'No link')
         msg += f"**Tiêu đề**: {title}\n**Link**: {link}\n\n"
