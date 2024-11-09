@@ -6,7 +6,7 @@ import datetime
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-@app.timer_trigger(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=False,
+@app.timer_trigger(schedule="30 7 * * *", arg_name="myTimer", run_on_startup=False,
               use_monitor=False) 
 def daily(myTimer: func.TimerRequest) -> None:
     
@@ -14,7 +14,7 @@ def daily(myTimer: func.TimerRequest) -> None:
         logging.info('The timer is past due!')
 
     # Fetch news data from the API
-    url = 'https://newsdata.io/api/1/latest?country=vi&category=politics&apikey=pub_58695ffe53513b97d78ce05437d91b5109031'
+    url = f'https://newsdata.io/api/1/latest?country=vi&category=politics&apikey={os.getenv("NEWSDATA_KEY")}'
     response = requests.get(url)
 
     # Check if the request was successful
@@ -33,7 +33,7 @@ def daily(myTimer: func.TimerRequest) -> None:
         msg += f"**Tiêu đề**: {title}\n**Link**: {link}\n\n"
 
     # Send message to Discord
-    discord_webhook_url = os.getenv('https://discord.com/api/webhooks/1304729546934980668/RurMeu02XAOVJIET1xOc-AJSksNXC6pa5jRV9U_-kB5XwLu-TcMW-9pPZDFL0UBGOe1v')  # Set your Discord webhook URL in environment variables
+    discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')  # Set your Discord webhook URL in environment variables
     discord_message = {"content": msg}
 
     discord_response = requests.post(discord_webhook_url, json=discord_message)
